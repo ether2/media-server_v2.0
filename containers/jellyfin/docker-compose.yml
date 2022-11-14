@@ -1,0 +1,255 @@
+version: "3"
+
+services:
+  jellyfin:
+    image: linuxserver/jellyfin
+    container_name: jellyfin
+    restart: unless-stopped
+    networks:
+      media_ntw:
+        ipv4_address: 172.24.69.10
+      proxy:
+    volumes:
+      - ${PWD}/jellyfin/data/config:/config
+      - ${PWD}/jellyfin/data/cache:/cache
+      - ${STORAGE}:/media:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.entrypoints=http"
+      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.local.${DOMAIN}`)"
+      - "traefik.http.middlewares.jellyfin-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.jellyfin.middlewares=jellyfin-https-redirect"
+      - "traefik.http.routers.jellyfin-secure.entrypoints=https"
+      - "traefik.http.routers.jellyfin-secure.rule=Host(`jellyfin.local.${DOMAIN}`)"
+      - "traefik.http.routers.jellyfin-secure.tls=true"
+      - "traefik.http.routers.jellyfin-secure.service=transmission"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+      - "traefik.docker.network=proxy"
+    env_file:
+      - .env
+
+  transmission:
+    image: haugene/transmission-openvpn:latest
+    container_name: transmission
+    cap_add:
+      - NET_ADMIN
+    restart: always
+    volumes:
+      - ./transmission:/config
+      - ./transmission/openvpn-credentials.txt:/config/openvpn-credentials.txt
+      - ${STORAGE}/downloads:/data/downloads
+      - ${STORAGE}/blackhole:/data/watch
+      - ${STORAGE}/shows:/data/shows
+      - ${STORAGE}/movies:/data/movies
+      - ${STORAGE}/audiobooks:/data/audiobooks
+    logging:
+      driver: json-file
+      options:
+        max-size: 20m
+    environment:
+      - UID=1000
+      - GID=1000
+      - OPENVPN_PROVIDER=PIA
+      - OPENVPN_CONFIG=france
+      - OPENVPN_USERNAME=**None**
+      - OPENVPN_PASSWORD=**None**
+    env_file:
+      - .env
+    networks:
+      media_ntw:
+        ipv4_address: 172.24.69.11
+      proxy:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.transmission.entrypoints=http"
+      - "traefik.http.routers.transmission.rule=Host(`transmission.local.${DOMAIN}`)"
+      - "traefik.http.middlewares.transmission-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.transmission.middlewares=transmission-https-redirect"
+      - "traefik.http.routers.transmission-secure.entrypoints=https"
+      - "traefik.http.routers.transmission-secure.rule=Host(`transmission.local.${DOMAIN}`)"
+      - "traefik.http.routers.transmission-secure.tls=true"
+      - "traefik.http.routers.transmission-secure.service=transmission"
+      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
+      - "traefik.docker.network=proxy"
+
+  jackett:
+    image: linuxserver/jackett:latest
+    container_name: jackett
+    restart: always
+    volumes:
+      - ./jackett/data:/config
+      - ${STORAGE}/blackhole:/data/downloads
+    environment:
+      - UID=1000
+      - GID=1000
+    env_file:
+      - .env
+    networks:
+      media_ntw:
+        ipv4_address: 172.24.69.12
+      proxy: 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jackett.entrypoints=http"
+      - "traefik.http.routers.jackett.rule=Host(`jackett.local.${DOMAIN}`)"
+      - "traefik.http.middlewares.jackett-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.jackett.middlewares=jackett-https-redirect"
+      - "traefik.http.routers.jackett-secure.entrypoints=https"
+      - "traefik.http.routers.jackett-secure.rule=Host(`jackett.local.${DOMAIN}`)"
+      - "traefik.http.routers.jackett-secure.tls=true"
+      - "traefik.http.routers.jackett-secure.service=jackett"
+      - "traefik.http.services.jackett.loadbalancer.server.port=9117"
+      - "traefik.docker.network=proxy"
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+    networks:
+      media_ntw:
+        ipv4_address: 172.24.69.13
+      proxy: 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flaresolverr.entrypoints=http"
+      - "traefik.http.routers.flaresolverr.rule=Host(`flaresolverr.local.${DOMAIN}`)"
+      - "traefik.http.middlewares.flaresolverr-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.flaresolverr.middlewares=flaresolverr-https-redirect"
+      - "traefik.http.routers.flaresolverr-secure.entrypoints=https"
+      - "traefik.http.routers.flaresolverr-secure.rule=Host(`flaresolverr.local.${DOMAIN}`)"
+      - "traefik.http.routers.flaresolverr-secure.tls=true"
+      - "traefik.http.routers.flaresolverr-secure.service=flaresolverr"
+      - "traefik.http.services.flaresolverr.loadbalancer.server.port=8191"
+      - "traefik.docker.network=proxy"
+
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: always 
+    volumes:
+      - ./sonarr:/config
+      - ${STORAGE}/shows:/shows
+      - ${STORAGE}/downloads:/data/downloads
+    environment:
+      - UID=1000
+      - GID=1000
+    env_file:
+      - .env
+    networks:
+      media_ntw:
+        ipv4_address: 172.24.69.14
+      proxy: 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.entrypoints=http"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.local.${DOMAIN}`)"
+      - "traefik.http.middlewares.sonarr-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.sonarr.middlewares=sonarr-https-redirect"
+      - "traefik.http.routers.sonarr-secure.entrypoints=https"
+      - "traefik.http.routers.sonarr-secure.rule=Host(`sonarr.local.${DOMAIN}`)"
+      - "traefik.http.routers.sonarr-secure.tls=true"
+      - "traefik.http.routers.sonarr-secure.service=sonarr"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+      - "traefik.docker.network=proxy"
+
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: radarr
+    restart: always 
+    volumes:
+      - ./radarr:/config
+      - ${STORAGE}/movies:/movies
+      - ${STORAGE}/downloads:/data/downloads
+    environment:
+      - UID=1000
+      - GID=1000
+    env_file:
+      - .env
+    networks:
+      media_ntw:
+        ipv4_address: 172.24.69.15
+      proxy: 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.entrypoints=http"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.local.${DOMAIN}`)"
+      - "traefik.http.middlewares.radarr-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.radarr.middlewares=radarr-https-redirect"
+      - "traefik.http.routers.radarr-secure.entrypoints=https"
+      - "traefik.http.routers.radarr-secure.rule=Host(`radarr.local.${DOMAIN}`)"
+      - "traefik.http.routers.radarr-secure.tls=true"
+      - "traefik.http.routers.radarr-secure.service=radarr"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+      - "traefik.docker.network=proxy"
+
+  bazarr:
+    image: linuxserver/bazarr:latest
+    container_name: bazarr
+    restart: always 
+    volumes:
+      - ./bazarr:/config
+      - ${STORAGE}/audiobooks:/data/audiobooks
+    environment:
+      - UID=1000
+      - GID=1000
+    env_file:
+      - .env
+    networks:
+      media_ntw:
+        ipv4_address: 172.24.69.16
+      proxy: 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bazarr.entrypoints=http"
+      - "traefik.http.routers.bazarr.rule=Host(`bazarr.local.${DOMAIN}`)"
+      - "traefik.http.middlewares.bazarr-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.bazarr.middlewares=bazarr-https-redirect"
+      - "traefik.http.routers.bazarr-secure.entrypoints=https"
+      - "traefik.http.routers.bazarr-secure.rule=Host(`bazarr.local.${DOMAIN}`)"
+      - "traefik.http.routers.bazarr-secure.tls=true"
+      - "traefik.http.routers.bazarr-secure.service=bazarr"
+      - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
+      - "traefik.docker.network=proxy"
+
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    restart: always 
+    volumes:
+      - jellyseer_data:/app/config
+    environment:
+      - LOG_LEVEL=debug
+    env_file:
+      - .env
+    networks:
+      media_ntw:
+        ipv4_address: 172.24.69.17
+      proxy: 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyseerr.entrypoints=http"
+      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.local.${DOMAIN}`)"
+      - "traefik.http.middlewares.jellyseerr-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.jellyseerr.middlewares=jellyseerr-https-redirect"
+      - "traefik.http.routers.jellyseerr-secure.entrypoints=https"
+      - "traefik.http.routers.jellyseerr-secure.rule=Host(`jellyseerr.local.${DOMAIN}`)"
+      - "traefik.http.routers.jellyseerr-secure.tls=true"
+      - "traefik.http.routers.jellyseerr-secure.service=jellyseerr"
+      - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
+      - "traefik.docker.network=proxy"
+
+volumes:
+  bazarr_data:
+    external: true 
+  jellyseerr_data:
+    external: true 
+
+
+networks:
+  proxy:
+    external: true
+  media_ntw:
+    external: true 

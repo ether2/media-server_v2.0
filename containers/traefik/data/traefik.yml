@@ -3,17 +3,17 @@ api:
   debug: true
 entryPoints:
   http:
-    address: :80
+    address: ":80"
   https:
-    address: :443
+    address: ":443"
 serversTransport:
-  insecreSkipVerify: true
+  insecureSkipVerify: true
 providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
-      file:
-        filename: /config.yml
+  file:
+    filename: /config.yml
 certificatesResolvers:
   cloudflare:
     acme:

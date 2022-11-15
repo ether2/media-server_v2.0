@@ -9,6 +9,10 @@ services:
       - no-new-privileges:true
     networks:
       - proxy
+    ports:
+      - 8000:8000
+      - 9000:9000
+      - 9443:9443
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
@@ -22,7 +26,7 @@ services:
       - "traefik.http.routers.portainer-secure.entrypoints=https"
       - "traefik.http.routers.portainer-secure.rule=Host(`portainer.local.${DOMAIN}`)"
       - "traefik.http.routers.portainer-secure.tls=true"
-      - "traefik.http.routers.portainer-secure.service=transmission"
+      - "traefik.http.routers.portainer-secure.service=portainer"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
       - "traefik.docker.network=proxy"
 

@@ -22,7 +22,7 @@ services:
       - "traefik.http.routers.jellyfin-secure.entrypoints=https"
       - "traefik.http.routers.jellyfin-secure.rule=Host(`jellyfin.local.${DOMAIN}`)"
       - "traefik.http.routers.jellyfin-secure.tls=true"
-      - "traefik.http.routers.jellyfin-secure.service=transmission"
+      - "traefik.http.routers.jellyfin-secure.service=jellyfin"
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
       - "traefik.docker.network=proxy"
     env_file:

@@ -26,7 +26,7 @@ services:
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
       - "traefik.docker.network=proxy"
 
-  volumes:
+volumes:
   portainer_data:
     external: true 
 

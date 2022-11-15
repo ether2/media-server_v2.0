@@ -10,8 +10,8 @@ services:
         ipv4_address: 172.24.69.10
       proxy:
     volumes:
-      - ${PWD}/jellyfin/data/config:/config
-      - ${PWD}/jellyfin/data/cache:/cache
+      - ${PTH}/jellyfin/data/config:/config
+      - ${PTH}/jellyfin/data/cache:/cache
       - ${STORAGE}:/media:ro
     labels:
       - "traefik.enable=true"
@@ -219,7 +219,7 @@ services:
     container_name: jellyseerr
     restart: always 
     volumes:
-      - jellyseer_data:/app/config
+      - jellyseerr_data:/app/config
     environment:
       - LOG_LEVEL=debug
     env_file:

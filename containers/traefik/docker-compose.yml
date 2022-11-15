@@ -12,6 +12,9 @@ services:
     ports:
       - 80:80
       - 443:443
+    environment:
+      - CF_API_EMAIL=${CLOUDFLARE_API_EMAIL}
+      - CF_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
     env_file:
       - .env
     volumes:

@@ -10,8 +10,8 @@ services:
         ipv4_address: 172.24.69.10
       proxy:
     volumes:
-      - ${PTH}/jellyfin/data/config:/config
-      - ${PTH}/jellyfin/data/cache:/cache
+      - jellyfin_config:/config
+      - jellyfin_cache:/cache
       - ${STORAGE}:/media:ro
     labels:
       - "traefik.enable=true"
@@ -35,7 +35,7 @@ services:
       - NET_ADMIN
     restart: always
     volumes:
-      - ./transmission:/config
+      - transmission_data:/config
       - ./transmission/openvpn-credentials.txt:/config/openvpn-credentials.txt
       - ${STORAGE}/downloads:/data/downloads
       - ${STORAGE}/blackhole:/data/watch
@@ -77,7 +77,7 @@ services:
     container_name: jackett
     restart: always
     volumes:
-      - ./jackett/data:/config
+      - jackett_data:/config
       - ${STORAGE}/blackhole:/data/downloads
     environment:
       - UID=1000
@@ -130,7 +130,7 @@ services:
     container_name: sonarr
     restart: always 
     volumes:
-      - ./sonarr:/config
+      - sonarr_data:/config
       - ${STORAGE}/shows:/shows
       - ${STORAGE}/downloads:/data/downloads
     environment:
@@ -160,7 +160,7 @@ services:
     container_name: radarr
     restart: always 
     volumes:
-      - ./radarr:/config
+      - radarr_config:/config
       - ${STORAGE}/movies:/movies
       - ${STORAGE}/downloads:/data/downloads
     environment:
@@ -190,7 +190,7 @@ services:
     container_name: bazarr
     restart: always 
     volumes:
-      - ./bazarr:/config
+      - bazarr_data:/config
       - ${STORAGE}/audiobooks:/data/audiobooks
     environment:
       - UID=1000
@@ -242,11 +242,22 @@ services:
       - "traefik.docker.network=proxy"
 
 volumes:
+  jellyfin_cache:
+    external: true
+  jellyfin_config:
+    external: true
+  transmission_data:
+    external: true
+  jackett_data:
+    external: true
+  sonarr_data:
+    external: true
+  radarr_data:
+    external: true
   bazarr_data:
     external: true 
   jellyseerr_data:
     external: true 
-
 
 networks:
   proxy:

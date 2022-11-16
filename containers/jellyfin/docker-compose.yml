@@ -160,7 +160,7 @@ services:
     container_name: radarr
     restart: always 
     volumes:
-      - radarr_config:/config
+      - radarr_data:/config
       - ${STORAGE}/movies:/movies
       - ${STORAGE}/downloads:/data/downloads
     environment:

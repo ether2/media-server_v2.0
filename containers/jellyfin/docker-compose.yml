@@ -37,11 +37,12 @@ services:
     volumes:
       - transmission_data:/config
       - ./transmission/openvpn-credentials.txt:/config/openvpn-credentials.txt
-      - ${STORAGE}/downloads:/data/downloads
-      - ${STORAGE}/blackhole:/data/watch
-      - ${STORAGE}/shows:/data/shows
-      - ${STORAGE}/movies:/data/movies
-      - ${STORAGE}/audiobooks:/data/audiobooks
+      - ${STORAGE}:/data 
+      #- ${STORAGE}/downloads:/data/downloads
+      #- ${STORAGE}/blackhole:/data/watch
+      #- ${STORAGE}/shows:/data/shows
+      #- ${STORAGE}/movies:/data/movies
+      #- ${STORAGE}/audiobooks:/data/audiobooks
     logging:
       driver: json-file
       options:

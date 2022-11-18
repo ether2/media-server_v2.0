@@ -16,7 +16,8 @@ jobs:
     # - name: automated back up of local docker volumes (step to be added later)
       - name: restart remote containers
         run: | 
-          sudo git pull
+          cd ~/media-server_v2.0
+          git pull
           for container in traefik vaultwarden portainer jellyfin cadvisor
           do
            cd ~/media-server_v2.0/containers/$container

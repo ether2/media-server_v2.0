@@ -19,6 +19,6 @@ jobs:
           sudo git pull
           for container in traefik vaultwarden portainer jellyfin cadvisor
           do
-           cd ~/mediaserver_v2.0/containers/$container/
+           cd ~/media-server_v2.0/containers/$container
            sudo docker compose up -d --force-recreate
           done

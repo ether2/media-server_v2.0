@@ -38,6 +38,8 @@ services:
       - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
       - "traefik.http.routers.traefik-secure.tls.domains[0].main=local.${DOMAIN}"
       - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.local.${DOMAIN}"
+      - "traefik.http.routers.traefik-secure.tls.domains[1].main=${DOMAIN}"
+      - "traefik.http.routers.traefik-secure.tls.domains[1].sans=*.${DOMAIN}"
       - "traefik.http.routers.traefik-secure.service=api@internal"
 
 networks:

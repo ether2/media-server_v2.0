@@ -11,11 +11,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.vault.entrypoints=http"
-      - "traefik.http.routers.vault.rule=Host(`vaultwarden.local.${EX_DOMAIN}`, `vaultwarden.${EX_DOMAIN}`)"
+      - "traefik.http.routers.vault.rule=Host(`vaultwarden.local.${MY_DOMAIN}`, `vaultwarden.${MY_DOMAIN}`)"
       - "traefik.http.middlewares.vault-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.vault.middlewares=vault-https-redirect"
       - "traefik.http.routers.vault-secure.entrypoints=https"
-      - "traefik.http.routers.vault-secure.rule=Host(`vaultwarden.local.${EX_DOMAIN}`, `vaultwarden.${EX_DOMAIN}`)"
+      - "traefik.http.routers.vault-secure.rule=Host(`vaultwarden.local.${MY_DOMAIN}`, `vaultwarden.${MY_DOMAIN}`)"
       - "traefik.http.routers.vault-secure.tls=true"
       - "traefik.http.routers.vault-secure.service=vault"
       - "traefik.http.services.vault.loadbalancer.server.port=80"

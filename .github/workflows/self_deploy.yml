@@ -12,7 +12,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: git pull on remote server # name of your workflow
-        uses: actions/checkout@v2 
+        uses: actions/checkout@v3
     # - name: automated back up of local docker volumes (step to be added later)
       - name: restart remote containers
         run: | 

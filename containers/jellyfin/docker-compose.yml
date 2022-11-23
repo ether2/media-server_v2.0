@@ -36,24 +36,11 @@ services:
     restart: always
     volumes:
       - transmission_data:/config
-      - ./transmission/openvpn-credentials.txt:/config/openvpn-credentials.txt
       - ${STORAGE}:/data 
-      #- ${STORAGE}/downloads:/data/downloads
-      #- ${STORAGE}/blackhole:/data/watch
-      #- ${STORAGE}/shows:/data/shows
-      #- ${STORAGE}/movies:/data/movies
-      #- ${STORAGE}/audiobooks:/data/audiobooks
     logging:
       driver: json-file
       options:
         max-size: 20m
-    environment:
-      - UID=1000
-      - GID=1000
-      - OPENVPN_PROVIDER=PIA
-      - OPENVPN_CONFIG=france
-      - OPENVPN_USERNAME=**None**
-      - OPENVPN_PASSWORD=**None**
     env_file:
       - .env
     networks:

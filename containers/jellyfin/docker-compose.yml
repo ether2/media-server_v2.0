@@ -229,9 +229,38 @@ services:
       - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
       - "traefik.docker.network=proxy"
 
+  jfaccount:
+    image: hrfee/jfa-go:latest
+    container_name: jellyfin_accounts
+    restart: always
+    volumes:
+      - jellyfin_accounts_data:/data
+      - jellyfin_config:/jf
+      - /etc/localtime:/etc/localtime:ro 
+    networks:
+      media_ntw:
+        ipv4_address: 172.24.69.18
+      proxy: 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin_accounts.entrypoints=http"
+      - "traefik.http.routers.jellyfin_accounts.rule=Host(`jellyfin_accounts.local.${MY_DOMAIN}`, `jellyfin_accounts.${MY_DOMAIN}`)"
+      - "traefik.http.middlewares.jellyfin_accounts-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.jellyfin_accounts.middlewares=jellyfin_accounts-https-redirect"
+      - "traefik.http.routers.jellyfin_accounts-secure.entrypoints=https"
+      - "traefik.http.routers.jellyfin_accounts-secure.rule=Host(`jellyfin_accounts.local.${MY_DOMAIN}`, `jellyfin_accounts.${MY_DOMAIN}`)"
+      - "traefik.http.routers.jellyfin_accounts-secure.tls=true"
+      - "traefik.http.routers.jellyfin_accounts-secure.service=jellyfin_accounts"
+      - "traefik.http.services.jellyfin_accounts.loadbalancer.server.port=8056"
+      - "traefik.docker.network=proxy"
+
+
+
 volumes:
   jellyfin_cache:
     external: true
+  jellyfin_accounts_data:
+    external: true 
   jellyfin_config:
     external: true
   transmission_data:

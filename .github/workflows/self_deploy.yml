@@ -13,7 +13,6 @@ jobs:
     steps:
       - name: git pull on remote server
         uses: actions/checkout@v3
-    # - name: automated back up of local docker volumes (step to be added later)
       - name: restart remote containers
         run: | 
           cd ~/media-server_v2.0

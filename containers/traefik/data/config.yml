@@ -1,0 +1,14 @@
+http:
+  routers:
+    matrix:
+      entryPoints:
+        - "web"
+      service: matrix-service
+      rule: "Host(`matrix.insley.cloud`)"
+
+  services:
+    matrix-service:
+      loadBalancer:
+        servers:
+        - url: "http://192.168.200.111/"
+        passHostHeader: false

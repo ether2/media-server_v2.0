@@ -2,7 +2,7 @@ http:
   routers:
     matrix:
       entryPoints:
-        - "web"
+        - "http"
       service: matrix-service
       rule: "Host(`matrix.insley.cloud`)"
 

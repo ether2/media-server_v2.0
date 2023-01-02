@@ -1,8 +1,6 @@
 http:
   routers:
     matrix:
-      entryPoints:
-        - "http"
       service: matrix-service
       rule: "Host(`matrix.insley.cloud`, `element.insley.cloud`, `insley.cloud`)"
 
@@ -12,3 +10,4 @@ http:
         servers:
         - url: "http://192.168.200.111/"
         passHostHeader: false
+

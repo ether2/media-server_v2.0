@@ -180,6 +180,8 @@ services:
     volumes:
       - bazarr_data:/config
       - ${STORAGE}/audiobooks:/data/audiobooks
+      - ${STORAGE}/movies:/movies
+      - ${STORAGE}/shows:/shows
     environment:
       - UID=1000
       - GID=1000

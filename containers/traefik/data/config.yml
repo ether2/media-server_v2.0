@@ -1,13 +1,15 @@
-http:
+tcp:
   routers:
     matrix:
       service: matrix-service
-      rule: "Host(`matrix.insley.cloud`, `element.insley.cloud`, `insley.cloud`)"
+      rule: "HostSNI(`matrix.insley.cloud`, `element.insley.cloud`, `insley.cloud`)"
+      tls:
+        passthrough: true
 
   services:
     matrix-service:
       loadBalancer:
         servers:
         - url: "http://192.168.200.111/"
-        passHostHeader: false
+        passHostHeader: true
 

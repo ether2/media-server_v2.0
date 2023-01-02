@@ -41,6 +41,18 @@ services:
       - "traefik.http.routers.traefik-secure.tls.domains[1].main=${MY_DOMAIN}"
       - "traefik.http.routers.traefik-secure.tls.domains[1].sans=*.${MY_DOMAIN}"
       - "traefik.http.routers.traefik-secure.service=api@internal"
+    # forward service to separate server
+      - "traefik.http.routers.matrix.entrypoints=http"
+      - "traefik.http.routers.matrix.rule=Host(`matrix.${MY_DOMAIN}`)"
+      - "traefik.http.services.matrix.loadbalancer.server.url=http://192.168.200.111"
+      - "traefik.http.routers.matrix-secure.entrypoints=https"
+      - "traefik.http.routers.matrix-secure.rule=Host(`matrix.${MY_DOMAIN}`)"
+      - "traefik.http.services.matrix-secure.loadbalancer.server.url=http://192.168.200.111"
+
+
+
+
+
 
 networks:
   proxy:

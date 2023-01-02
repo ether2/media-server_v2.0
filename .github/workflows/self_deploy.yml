@@ -17,7 +17,6 @@ jobs:
         run: | 
           cd ~/media-server_v2.0
           git pull
-    # for container in traefik portainer jellyfin cadvisor
           for container in traefik
           do
            cd ~/media-server_v2.0/containers/$container

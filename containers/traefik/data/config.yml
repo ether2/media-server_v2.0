@@ -4,7 +4,7 @@ http:
       entryPoints:
         - "http"
       service: matrix-service
-      rule: "Host(`matrix.insley.cloud`, `element.insley.cloud`)"
+      rule: "Host(`matrix.insley.cloud`, `element.insley.cloud`, `insley.cloud`)"
 
   services:
     matrix-service:

@@ -1,0 +1,14 @@
+tcp:
+  routers:
+    matrix:
+      service: matrix-service
+      rule: "HostSNI(`matrix.insley.cloud`, `element.insley.cloud`, `insley.cloud`, `goneb.insley.cloud`)"
+      priority: 2
+      tls:
+        passthrough: true
+
+  services:
+    matrix-service:
+      loadBalancer:
+        servers:
+        - address: "192.168.200.111:443"

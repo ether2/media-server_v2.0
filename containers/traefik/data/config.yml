@@ -10,4 +10,4 @@ tcp:
     matrix-service:
       loadBalancer:
         servers:
-        - address: "192.168.200.111:80"
+        - address: "192.168.200.111:443"

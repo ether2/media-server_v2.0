@@ -2,7 +2,7 @@ tcp:
   routers:
     matrix:
       service: matrix-service
-      rule: "HostSNI(`matrix.insley.cloud`, `element.insley.cloud`, `insley.cloud`)"
+      rule: "HostSNI(`matrix.insley.cloud`, `element.insley.cloud`, `insley.cloud`, `goneb.insley.cloud`)"
       tls:
         passthrough: true
 

@@ -1,23 +1,28 @@
-http:
+tcp:
   routers:
-    matrix-acme:
-      priority: 2
-      rule: "Host(`matrix.insley.cloud`, `element.insley.cloud`, `insley.cloud`, `goneb.insley.cloud`) && PathPrefix(`/.well-known/acme-challenge/)"
-      service: matrix-acme-service
-      tls:
-        passthrough: true
     matrix:
       priority: 1
-      rule: "Host(`matrix.insley.cloud`, `element.insley.cloud`, `insley.cloud`, `goneb.insley.cloud`)"
+      rule: "HostSNI(`matrix.insley.cloud`, `element.insley.cloud`, `insley.cloud`, `goneb.insley.cloud`)"
       service: matrix-service
       tls:
         passthrough: true
+
+  services:
+    matrix-service:
+      loadBalancer:
+        servers:
+        - address: "192.168.200.111:443"
+
+http:
+  routers:
+    matrix:
+      priority: 10
+      rule: "Host(`matrix.insley.cloud`, `element.insley.cloud`, `insley.cloud`, `goneb.insley.cloud`) && PathPrefix(`/.well-known/acme-challenge/) && Method(`GET`)"
+      service: matrix-acme-service
+      
   services:
     matrix-acme-service:
       loadBalancer:
         servers:
-        - url: http://192.168.200.111/
-    matrix-service:
-      loadBalancer:
-        servers:
-        - url: https://192..168.200.111/
+        - url: http://192.168.200.111:2042
+

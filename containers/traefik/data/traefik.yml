@@ -6,6 +6,8 @@ entryPoints:
     address: ":80"
   https:
     address: ":443"
+log:
+  level: DEBUG
 serversTransport:
   insecureSkipVerify: true
 providers:

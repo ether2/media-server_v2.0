@@ -240,7 +240,7 @@ services:
       - jellyfin_config:/jf
       - /etc/localtime:/etc/localtime:ro 
     extra_hosts:
-      - "jellyfin.insley.cloud:172.24.69.10"
+      - "jellyfin.insley.cloud:192.168.200.109"
     networks:
       media_ntw:
         ipv4_address: 172.24.69.18

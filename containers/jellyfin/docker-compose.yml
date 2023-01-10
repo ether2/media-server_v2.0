@@ -4,7 +4,7 @@ services:
   jellyfin:
     image: linuxserver/jellyfin
     command:
-      - '--gpus all'
+      - '--runtime=nvidia'
     container_name: jellyfin
     restart: unless-stopped
     networks:
@@ -28,7 +28,7 @@ services:
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
       - "traefik.docker.network=proxy"
     env_file:
-      - .env
+      - jelly.env
 
   transmission:
     image: haugene/transmission-openvpn:latest

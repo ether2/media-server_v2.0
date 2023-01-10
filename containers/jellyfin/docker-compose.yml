@@ -3,6 +3,8 @@ version: "3"
 services:
   jellyfin:
     image: linuxserver/jellyfin
+    command:
+      - '--gpus all'
     container_name: jellyfin
     restart: unless-stopped
     networks:

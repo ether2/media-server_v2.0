@@ -249,15 +249,15 @@ services:
       proxy: 
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jellyfin_accounts.entrypoints=http"
-      - "traefik.http.routers.jellyfin_accounts.rule=Host(`jellyfin_accounts.local.${MY_DOMAIN}`, `jellyfin_accounts.${MY_DOMAIN}`)"
-      - "traefik.http.middlewares.jellyfin_accounts-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.jellyfin_accounts.middlewares=jellyfin_accounts-https-redirect"
-      - "traefik.http.routers.jellyfin_accounts-secure.entrypoints=https"
-      - "traefik.http.routers.jellyfin_accounts-secure.rule=Host(`jellyfin_accounts.local.${MY_DOMAIN}`, `jellyfin_accounts.${MY_DOMAIN}`)"
-      - "traefik.http.routers.jellyfin_accounts-secure.tls=true"
-      - "traefik.http.routers.jellyfin_accounts-secure.service=jellyfin_accounts"
-      - "traefik.http.services.jellyfin_accounts.loadbalancer.server.port=8056"
+      - "traefik.http.routers.jellyfin-accounts.entrypoints=http"
+      - "traefik.http.routers.jellyfin-accounts.rule=Host(`jellyfin-accounts.local.${MY_DOMAIN}`, `jellyfin-accounts.${MY_DOMAIN}`)"
+      - "traefik.http.middlewares.jellyfin-accounts-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.jellyfin-accounts.middlewares=jellyfin-accounts-https-redirect"
+      - "traefik.http.routers.jellyfin-accounts-secure.entrypoints=https"
+      - "traefik.http.routers.jellyfin-accounts-secure.rule=Host(`jellyfin-accounts.local.${MY_DOMAIN}`, `jellyfin-accounts.${MY_DOMAIN}`)"
+      - "traefik.http.routers.jellyfin-accounts-secure.tls=true"
+      - "traefik.http.routers.jellyfin-accounts-secure.service=jellyfin-accounts"
+      - "traefik.http.services.jellyfin-accounts.loadbalancer.server.port=8056"
       - "traefik.docker.network=proxy"
 
 

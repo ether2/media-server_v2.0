@@ -3,8 +3,6 @@ version: "3"
 services:
   jellyfin:
     image: linuxserver/jellyfin
-    command:
-      - '--runtime=nvidia'
     container_name: jellyfin
     restart: unless-stopped
     networks:
@@ -29,6 +27,11 @@ services:
       - "traefik.docker.network=proxy"
     env_file:
       - jelly.env
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
 
   transmission:
     image: haugene/transmission-openvpn:latest
